@@ -5,14 +5,6 @@ minetest.register_alias("bucket", "bucket:bucket_empty")
 minetest.register_alias("bucket_water", "bucket:bucket_water")
 minetest.register_alias("bucket_lava", "bucket:bucket_lava")
 
-minetest.register_craft({
-	output = 'bucket:bucket_empty 1',
-	recipe = {
-		{'default:steel_ingot', '', 'default:steel_ingot'},
-		{'', 'default:steel_ingot', ''},
-	}
-})
-
 bucket = {}
 bucket.liquids = {}
 
@@ -180,44 +172,54 @@ minetest.register_craftitem("bucket:bucket_empty", {
 	end,
 })
 
-bucket.register_liquid(
-	"default:water_source",
-	"default:water_flowing",
-	"bucket:bucket_water",
-	"bucket_water.png",
-	"Water Bucket",
-	{tool = 1, water_bucket = 1}
-)
+-- MTG
+if minetest.get_modpath("default") then
+	minetest.register_craft({
+		output = 'bucket:bucket_empty 1',
+		recipe = {
+			{'default:steel_ingot', '', 'default:steel_ingot'},
+			{'', 'default:steel_ingot', ''},
+		}
+	})
 
--- River water source is 'liquid_renewable = false' to avoid horizontal spread
--- of water sources in sloping rivers that can cause water to overflow
--- riverbanks and cause floods.
--- River water source is instead made renewable by the 'force renew' option
--- used here.
+	bucket.register_liquid(
+		"default:water_source",
+		"default:water_flowing",
+		"bucket:bucket_water",
+		"bucket_water.png",
+		"Water Bucket",
+		{tool = 1, water_bucket = 1}
+	)
 
-bucket.register_liquid(
-	"default:river_water_source",
-	"default:river_water_flowing",
-	"bucket:bucket_river_water",
-	"bucket_river_water.png",
-	"River Water Bucket",
-	{tool = 1, water_bucket = 1},
-	true
-)
+	-- River water source is 'liquid_renewable = false' to avoid horizontal spread
+	-- of water sources in sloping rivers that can cause water to overflow
+	-- riverbanks and cause floods.
+	-- River water source is instead made renewable by the 'force renew' option
+	-- used here.
 
-bucket.register_liquid(
-	"default:lava_source",
-	"default:lava_flowing",
-	"bucket:bucket_lava",
-	"bucket_lava.png",
-	"Lava Bucket",
-	{tool = 1}
-)
+	bucket.register_liquid(
+		"default:river_water_source",
+		"default:river_water_flowing",
+		"bucket:bucket_river_water",
+		"bucket_river_water.png",
+		"River Water Bucket",
+		{tool = 1, water_bucket = 1},
+		true
+	)
 
-minetest.register_craft({
-	type = "fuel",
-	recipe = "bucket:bucket_lava",
-	burntime = 60,
-	replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}},
-})
+	bucket.register_liquid(
+		"default:lava_source",
+		"default:lava_flowing",
+		"bucket:bucket_lava",
+		"bucket_lava.png",
+		"Lava Bucket",
+		{tool = 1}
+	)
 
+	minetest.register_craft({
+		type = "fuel",
+		recipe = "bucket:bucket_lava",
+		burntime = 60,
+		replacements = {{"bucket:bucket_lava", "bucket:bucket_empty"}},
+	})
+end
